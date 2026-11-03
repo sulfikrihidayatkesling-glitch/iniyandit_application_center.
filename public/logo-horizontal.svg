@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220" width="760" height="220" fill="none">
+  <defs>
+    <linearGradient id="hCross" x1="36" y1="44" x2="146" y2="164" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="45%" stop-color="#0D9488" />
+      <stop offset="100%" stop-color="#064E3B" />
+    </linearGradient>
+    <linearGradient id="hOrbitTop" x1="42" y1="74" x2="162" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#14B8A6" />
+      <stop offset="100%" stop-color="#0D9488" />
+    </linearGradient>
+    <linearGradient id="hOrbitBottom" x1="26" y1="108" x2="164" y2="184" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#84CC16" />
+    </linearGradient>
+    <linearGradient id="hLeafMain" x1="82" y1="174" x2="180" y2="62" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#065F46" />
+      <stop offset="45%" stop-color="#16A34A" />
+      <stop offset="100%" stop-color="#A3E635" />
+    </linearGradient>
+    <linearGradient id="hBannerGrad" x1="252" y1="162" x2="720" y2="162" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F766E" />
+      <stop offset="100%" stop-color="#0D9488" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Icon Group -->
+  <g transform="translate(8, 6)">
+    <path d="M46 74C70 38 120 24 156 38C160 40 160 46 154 47C120 36 76 46 46 74Z" fill="url(#hOrbitTop)" />
+    <rect x="156" y="24" width="15" height="15" rx="3.5" fill="#0D9488" />
+    <rect x="177" y="32" width="16" height="16" rx="3.5" fill="#EAB308" />
+    <rect x="158" y="44" width="16" height="16" rx="3.5" fill="#22C55E" />
+    <rect x="138" y="51" width="15" height="15" rx="3.5" fill="#0F766E" />
+    <rect x="176" y="55" width="11" height="11" rx="2.5" fill="#84CC16" />
+
+    <path d="M76 58C76 49.1634 83.1634 42 92 42H114C122.837 42 130 49.1634 130 58V78H148C156.837 78 164 85.1634 164 94V114C164 122.837 156.837 130 148 130H130V152C130 160.837 122.837 168 114 168H92C83.1634 168 76 160.837 76 152V130H56C47.1634 130 40 122.837 40 114V94C40 85.1634 47.1634 78 56 78H76V58Z" fill="url(#hCross)" />
+
+    <circle cx="109" cy="84" r="11" fill="#FFFFFF" />
+    <path d="M62 89C86 88 100 98 111 109C122 94 140 80 160 76C139 86 125 102 112 124C102 140 90 158 80 174C90 144 97 118 90 103C84 93 74 90 62 89Z" fill="#FFFFFF" />
+
+    <path d="M80 176C100 128 132 98 170 64C180 92 180 124 160 148C142 168 112 174 80 176Z" fill="url(#hLeafMain)" />
+    <path d="M82 174C108 146 134 128 158 118" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
+    <path d="M38 112C20 152 50 196 110 190C138 187 160 176 174 164C150 180 118 185 88 181C46 175 28 146 38 112Z" fill="url(#hOrbitBottom)" />
+  </g>
+
+  <!-- Vertical Divider -->
+  <rect x="226" y="48" width="4" height="114" rx="2" fill="#0F766E" />
+
+  <!-- Typography Lockup -->
+  <text x="252" y="104" fill="#064E3B" font-family="Plus Jakarta Sans, sans-serif" font-size="68" font-weight="800" letter-spacing="-1.5">Iniyandit</text>
+  <!-- Small Leaf Above 'i'/'t' -->
+  <path d="M518 54C524 36 542 28 562 26C556 44 542 54 518 54Z" fill="#84CC16" />
+  <path d="M520 53C532 43 544 36 556 30" stroke="#065F46" stroke-width="2" stroke-linecap="round" />
+
+  <text x="252" y="148" fill="#0F766E" font-family="Plus Jakarta Sans, sans-serif" font-size="40" font-weight="700" letter-spacing="-0.5">Application Center</text>
+
+  <!-- Tagline Pill -->
+  <rect x="252" y="162" width="468" height="32" rx="16" fill="url(#hBannerGrad)" />
+  <text x="486" y="183" text-anchor="middle" fill="#FFFFFF" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-style="italic" font-weight="600">One Account. One Portal. All Applications.</text>
+</svg>

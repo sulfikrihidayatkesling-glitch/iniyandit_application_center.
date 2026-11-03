@@ -1,0 +1,79 @@
+name: Build & Verify — Iniyandit Application Center (Web & Windows Desktop)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  verify-and-build-web:
+    name: Web Build, TypeCheck, Firestore Rules & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: TypeScript Static Analysis
+        run: npm run lint
+
+      - name: Firestore Security Rules Lint
+        run: npm run lint:rules
+
+      - name: Run Unit Test Suite (Validation, Workspace, Smart Login, Full Screen)
+        run: npm test
+
+      - name: Build Production Web Bundle (Vite + PWA)
+        run: npm run build
+
+      - name: Upload Web Build Artifact (dist)
+        uses: actions/upload-artifact@v4
+        with:
+          name: iniyandit-web-dist
+          path: dist/
+          retention-days: 14
+
+  build-windows-desktop:
+    name: Windows Desktop Installer (.exe NSIS & Portable)
+    needs: verify-and-build-web
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Project Dependencies
+        run: npm install
+
+      - name: Install Electron & Electron Builder for Packaging
+        run: npm install --no-save electron@^35.0.0 electron-builder@^26.0.0
+
+      - name: Build Windows Desktop Installer & Portable (.exe)
+        run: npm run electron:build:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Upload Windows Installer Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Iniyandit-Application-Center-Windows-x64
+          path: |
+            release/*.exe
+            release/*.blockmap
+          if-no-files-found: warn
+          retention-days: 30

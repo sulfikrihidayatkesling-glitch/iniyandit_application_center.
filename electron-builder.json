@@ -1,0 +1,54 @@
+{
+  "appId": "id.go.puskesmasiniyandit.appcenter",
+  "productName": "Iniyandit Application Center",
+  "copyright": "Copyright © 2026 UPTD Puskesmas Iniyandit — Dirancang dan Dikembangkan oleh Sulfikri Hidayat, S.Tr.Kes.",
+  "asar": true,
+  "directories": {
+    "output": "release",
+    "buildResources": "public"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "public/favicon.ico",
+    "public/icon-512.png",
+    "package.json"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "public/icon-512.png",
+    "artifactName": "Iniyandit-Application-Center-Setup-${version}.${ext}"
+  },
+  "portable": {
+    "artifactName": "Iniyandit-Application-Center-Portable-${version}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Iniyandit Application Center",
+    "uninstallDisplayName": "Iniyandit Application Center — UPTD Puskesmas Iniyandit",
+    "installerIcon": "public/favicon.ico",
+    "uninstallerIcon": "public/favicon.ico",
+    "installerHeaderIcon": "public/favicon.ico",
+    "deleteAppDataOnUninstall": false
+  },
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://updates.puskesmas-iniyandit.go.id/desktop/"
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "Represents an external or internal healthcare web application managed in the Iniyandit Application Center portal.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier matching the Firestore document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the application.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "url": {
+          "type": "string",
+          "description": "Target launch URL starting with http:// or https://.",
+          "minLength": 8,
+          "maxLength": 1000,
+          "pattern": "^https?://.+"
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL or encoded data URI for the application logo.",
+          "minLength": 0,
+          "maxLength": 500000
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Foreign key referencing a Category document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Concise description of the application purpose.",
+          "minLength": 0,
+          "maxLength": 600
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the application is visible on the public officer dashboard."
+        },
+        "displayOrder": {
+          "type": "integer",
+          "description": "Numeric sort order (ascending)."
+        },
+        "openCount": {
+          "type": "integer",
+          "description": "Counter tracking how many times the application was opened."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the application was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the application was last updated."
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Firebase Auth UID of the administrator who created the record.",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "url",
+        "logoUrl",
+        "categoryId",
+        "description",
+        "isActive",
+        "displayOrder",
+        "openCount",
+        "createdAt",
+        "updatedAt",
+        "createdBy"
+      ]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Dynamic application category for grouping applications on the portal.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique category ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Category display name.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Category description.",
+          "minLength": 0,
+          "maxLength": 500
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon identifier for the category badge.",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "displayOrder": {
+          "type": "integer",
+          "description": "Numeric sort order."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the category is active and visible."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation server timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "icon",
+        "displayOrder",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized portal administrator record.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID or deterministic admin identifier.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the administrator.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the administrator.",
+          "minLength": 3,
+          "maxLength": 254
+        },
+        "role": {
+          "type": "string",
+          "description": "Role level of the administrator.",
+          "enum": ["super_admin", "admin"]
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the administrator account is currently active."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation server timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp."
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "UID of the admin who registered this record.",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "uid",
+        "name",
+        "email",
+        "role",
+        "isActive",
+        "createdAt",
+        "updatedAt",
+        "createdBy"
+      ]
+    },
+    "PortalSettings": {
+      "title": "PortalSettings",
+      "description": "Global configuration for the Iniyandit Application Center portal.",
+      "type": "object",
+      "properties": {
+        "portalName": {
+          "type": "string",
+          "description": "Name of the application portal.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "institutionName": {
+          "type": "string",
+          "description": "Name of the healthcare institution.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "tagline": {
+          "type": "string",
+          "description": "Portal tagline.",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "portalDescription": {
+          "type": "string",
+          "description": "Portal hero description.",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "Custom portal logo URL (empty uses built-in SVG logo).",
+          "minLength": 0,
+          "maxLength": 500000
+        },
+        "officialLogoUrl": {
+          "type": "string",
+          "description": "Optional UPTD Puskesmas Iniyandit official emblem URL.",
+          "minLength": 0,
+          "maxLength": 500000
+        },
+        "primaryColor": {
+          "type": "string",
+          "description": "Primary hex color code.",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^#[0-9a-fA-F]{3,8}$"
+        },
+        "isPublic": {
+          "type": "boolean",
+          "description": "Flag indicating this setting document is readable by public officers."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp."
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "UID of the admin who updated the settings.",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "portalName",
+        "institutionName",
+        "tagline",
+        "portalDescription",
+        "logoUrl",
+        "officialLogoUrl",
+        "primaryColor",
+        "isPublic",
+        "updatedAt",
+        "updatedBy"
+      ]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Immutable audit log entry recording administrative actions.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique log ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "action": {
+          "type": "string",
+          "description": "Human-readable description of the administrative action.",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "entityType": {
+          "type": "string",
+          "description": "Type of entity affected.",
+          "enum": ["application", "category", "admin", "settings", "auth"]
+        },
+        "entityName": {
+          "type": "string",
+          "description": "Name of the affected entity.",
+          "minLength": 0,
+          "maxLength": 120
+        },
+        "actorUid": {
+          "type": "string",
+          "description": "UID of the administrator who performed the action.",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "actorName": {
+          "type": "string",
+          "description": "Display name or email of the administrator.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the action."
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "entityType",
+        "entityName",
+        "actorUid",
+        "actorName",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/applications/{appId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Healthcare and internal applications managed by administrators. Public can read only when isActive == true."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Dynamic categories for grouping applications. Public can read only when isActive == true."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized administrator directory containing PII (email). Restricted to owner or verified admins."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/PortalSettings" },
+      "description": "Global portal branding and configuration settings. Public can read when isPublic == true."
+    },
+    "/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Immutable administrative activity logs visible and creatable only by verified admins."
+    }
+  }
+}

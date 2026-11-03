@@ -1,0 +1,297 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================================
+    // Global Hardened Primitives
+    // =========================================================================
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(uid) {
+      return isVerifiedUser() && request.auth.uid == uid;
+    }
+
+    function isBootstrappedAdmin() {
+      return isVerifiedUser() &&
+        request.auth.token.email == 'sulfikrihidayatkesling@gmail.com';
+    }
+
+    function isRegisteredAdmin() {
+      return isVerifiedUser() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isActive == true;
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() || isRegisteredAdmin();
+    }
+
+    // =========================================================================
+    // Entity Validation Blueprints (Anti-Update-Gap)
+    // =========================================================================
+    function isValidApplication(data) {
+      return data.keys().hasAll([
+          'id', 'name', 'url', 'logoUrl', 'categoryId', 'description',
+          'isActive', 'displayOrder', 'openCount', 'createdAt', 'updatedAt', 'createdBy'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'name', 'url', 'logoUrl', 'categoryId', 'description',
+          'isActive', 'displayOrder', 'openCount', 'createdAt', 'updatedAt', 'createdBy'
+        ]) &&
+        isValidId(data.id) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.url is string && data.url.size() >= 8 && data.url.size() <= 1000 && data.url.matches('^https?://.+') &&
+        data.logoUrl is string && data.logoUrl.size() >= 0 && data.logoUrl.size() <= 500000 &&
+        isValidId(data.categoryId) &&
+        data.description is string && data.description.size() >= 0 && data.description.size() <= 600 &&
+        data.isActive is bool &&
+        data.displayOrder is int && data.displayOrder >= 0 && data.displayOrder <= 10000 &&
+        data.openCount is int && data.openCount >= 0 && data.openCount <= 1000000000 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128;
+    }
+
+    function isValidCategory(data) {
+      return data.keys().hasAll([
+          'id', 'name', 'description', 'icon', 'displayOrder', 'isActive', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'name', 'description', 'icon', 'displayOrder', 'isActive', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 100 &&
+        data.description is string && data.description.size() >= 0 && data.description.size() <= 500 &&
+        data.icon is string && data.icon.size() >= 1 && data.icon.size() <= 60 &&
+        data.displayOrder is int && data.displayOrder >= 0 && data.displayOrder <= 10000 &&
+        data.isActive is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidAdminUser(data) {
+      return data.keys().hasAll([
+          'uid', 'name', 'email', 'role', 'isActive', 'createdAt', 'updatedAt', 'createdBy'
+        ]) &&
+        data.keys().hasOnly([
+          'uid', 'name', 'email', 'role', 'isActive', 'createdAt', 'updatedAt', 'createdBy'
+        ]) &&
+        isValidId(data.uid) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 254 &&
+        data.role is string && (data.role == 'super_admin' || data.role == 'admin') &&
+        data.isActive is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128;
+    }
+
+    function isValidPortalSettings(data) {
+      return data.keys().hasAll([
+          'portalName', 'institutionName', 'tagline', 'portalDescription',
+          'logoUrl', 'officialLogoUrl', 'primaryColor', 'isPublic', 'updatedAt', 'updatedBy'
+        ]) &&
+        data.keys().hasOnly([
+          'portalName', 'institutionName', 'tagline', 'portalDescription',
+          'logoUrl', 'officialLogoUrl', 'primaryColor', 'isPublic', 'updatedAt', 'updatedBy'
+        ]) &&
+        data.portalName is string && data.portalName.size() >= 1 && data.portalName.size() <= 120 &&
+        data.institutionName is string && data.institutionName.size() >= 1 && data.institutionName.size() <= 120 &&
+        data.tagline is string && data.tagline.size() >= 1 && data.tagline.size() <= 200 &&
+        data.portalDescription is string && data.portalDescription.size() >= 1 && data.portalDescription.size() <= 600 &&
+        data.logoUrl is string && data.logoUrl.size() >= 0 && data.logoUrl.size() <= 500000 &&
+        data.officialLogoUrl is string && data.officialLogoUrl.size() >= 0 && data.officialLogoUrl.size() <= 500000 &&
+        data.primaryColor is string && data.primaryColor.size() >= 4 && data.primaryColor.size() <= 20 && data.primaryColor.matches('^#[0-9a-fA-F]{3,8}$') &&
+        data.isPublic is bool && data.isPublic == true &&
+        data.updatedAt is timestamp &&
+        data.updatedBy is string && data.updatedBy.size() >= 1 && data.updatedBy.size() <= 128;
+    }
+
+    function isValidActivityLog(data) {
+      return data.keys().hasAll([
+          'id', 'action', 'entityType', 'entityName', 'actorUid', 'actorName', 'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'action', 'entityType', 'entityName', 'actorUid', 'actorName', 'createdAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.action is string && data.action.size() >= 1 && data.action.size() <= 200 &&
+        data.entityType is string && (
+          data.entityType == 'application' ||
+          data.entityType == 'category' ||
+          data.entityType == 'admin' ||
+          data.entityType == 'settings' ||
+          data.entityType == 'auth'
+        ) &&
+        data.entityName is string && data.entityName.size() >= 0 && data.entityName.size() <= 120 &&
+        data.actorUid is string && data.actorUid.size() >= 1 && data.actorUid.size() <= 128 &&
+        data.actorName is string && data.actorName.size() >= 1 && data.actorName.size() <= 120 &&
+        data.createdAt is timestamp;
+    }
+
+    // =========================================================================
+    // Collection Rules
+    // =========================================================================
+
+    // 1. Applications (/applications/{appId})
+    match /applications/{appId} {
+      allow get: if isValidId(appId) && (existing().isActive == true || isAdmin());
+      allow list: if existing().isActive == true || isAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(appId) &&
+        isValidApplication(incoming()) &&
+        incoming().id == appId &&
+        incoming().createdBy == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin() &&
+        exists(/databases/$(database)/documents/categories/$(incoming().categoryId));
+
+      allow update: if isSignedIn() &&
+        isValidId(appId) &&
+        isValidApplication(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().createdBy == existing().createdBy &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        isAdmin() &&
+        exists(/databases/$(database)/documents/categories/$(incoming().categoryId)) && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'url', 'logoUrl', 'categoryId', 'description',
+            'isActive', 'displayOrder', 'openCount', 'updatedAt'
+          ]) ||
+          isBootstrappedAdmin()
+        );
+
+      allow delete: if isSignedIn() && isValidId(appId) && isAdmin();
+    }
+
+    // 2. Categories (/categories/{categoryId})
+    match /categories/{categoryId} {
+      allow get: if isValidId(categoryId) && (existing().isActive == true || isAdmin());
+      allow list: if existing().isActive == true || isAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(categoryId) &&
+        isValidCategory(incoming()) &&
+        incoming().id == categoryId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+
+      allow update: if isSignedIn() &&
+        isValidId(categoryId) &&
+        isValidCategory(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        isAdmin() && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'description', 'icon', 'displayOrder', 'isActive', 'updatedAt'
+          ]) ||
+          isBootstrappedAdmin()
+        );
+
+      allow delete: if isSignedIn() && isValidId(categoryId) && isAdmin();
+    }
+
+    // 3. Admins (/admins/{adminUid}) — Contains PII (email)
+    match /admins/{adminUid} {
+      allow get: if isSignedIn() && isValidId(adminUid) && (isOwner(adminUid) || isAdmin());
+      allow list: if isSignedIn() && (isOwner(adminUid) || isAdmin()) && isAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(adminUid) &&
+        isValidAdminUser(incoming()) &&
+        incoming().uid == adminUid &&
+        incoming().createdBy == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+
+      allow update: if isSignedIn() &&
+        isValidId(adminUid) &&
+        isValidAdminUser(incoming()) &&
+        incoming().uid == existing().uid &&
+        incoming().createdBy == existing().createdBy &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        isAdmin() && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'email', 'role', 'isActive', 'updatedAt'
+          ]) ||
+          isBootstrappedAdmin()
+        );
+
+      allow delete: if isSignedIn() && isValidId(adminUid) && isAdmin();
+    }
+
+    // 4. Portal Settings (/settings/{settingId})
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId) && (existing().isPublic == true || isAdmin());
+      allow list: if existing().isPublic == true || isAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(settingId) &&
+        isValidPortalSettings(incoming()) &&
+        incoming().updatedBy == request.auth.uid &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+
+      allow update: if isSignedIn() &&
+        isValidId(settingId) &&
+        isValidPortalSettings(incoming()) &&
+        incoming().updatedBy == request.auth.uid &&
+        incoming().updatedAt == request.time &&
+        isAdmin() && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'portalName', 'institutionName', 'tagline', 'portalDescription',
+            'logoUrl', 'officialLogoUrl', 'primaryColor', 'isPublic', 'updatedAt', 'updatedBy'
+          ]) ||
+          isBootstrappedAdmin()
+        );
+
+      allow delete: if isSignedIn() && isValidId(settingId) && isAdmin();
+    }
+
+    // 5. Activity Logs (/activity_logs/{logId}) — Immutable Audit Trail
+    match /activity_logs/{logId} {
+      allow get: if isSignedIn() && isValidId(logId) && isAdmin();
+      allow list: if isSignedIn() && (existing().actorUid == request.auth.uid || isAdmin()) && isAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(logId) &&
+        isValidActivityLog(incoming()) &&
+        incoming().id == logId &&
+        incoming().actorUid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        isAdmin();
+
+      allow update, delete: if false;
+    }
+  }
+}

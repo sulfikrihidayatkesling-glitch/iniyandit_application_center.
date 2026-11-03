@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="512" height="512" fill="none">
+  <defs>
+    <linearGradient id="iacBgFrame" x1="16" y1="16" x2="224" y2="224" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F0FDFA" />
+    </linearGradient>
+    <linearGradient id="iacCross" x1="40" y1="54" x2="152" y2="176" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="45%" stop-color="#0D9488" />
+      <stop offset="100%" stop-color="#064E3B" />
+    </linearGradient>
+    <linearGradient id="iacOrbitTop" x1="46" y1="84" x2="168" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#14B8A6" />
+      <stop offset="100%" stop-color="#0D9488" />
+    </linearGradient>
+    <linearGradient id="iacOrbitBottom" x1="30" y1="118" x2="170" y2="196" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#84CC16" />
+    </linearGradient>
+    <linearGradient id="iacLeafMain" x1="88" y1="186" x2="188" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#065F46" />
+      <stop offset="45%" stop-color="#16A34A" />
+      <stop offset="100%" stop-color="#A3E635" />
+    </linearGradient>
+    <linearGradient id="iacLeafEdge" x1="88" y1="186" x2="192" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#047857" />
+      <stop offset="60%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#84CC16" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded Square Base with Subtle Teal Border -->
+  <rect x="12" y="12" width="216" height="216" rx="48" fill="url(#iacBgFrame)" stroke="#14B8A6" stroke-width="4" stroke-opacity="0.35" />
+
+  <!-- Top Orbital Swoosh -->
+  <path d="M52 84C76 48 126 34 162 48C166 50 166 56 160 57C126 46 82 56 52 84Z" fill="url(#iacOrbitTop)" />
+
+  <!-- Digital Health Pixel Nodes (Top Right) -->
+  <rect x="162" y="34" width="15" height="15" rx="3.5" fill="#0D9488" />
+  <rect x="183" y="42" width="16" height="16" rx="3.5" fill="#EAB308" />
+  <rect x="164" y="54" width="16" height="16" rx="3.5" fill="#22C55E" />
+  <rect x="144" y="61" width="15" height="15" rx="3.5" fill="#0F766E" />
+  <rect x="182" y="65" width="11" height="11" rx="2.5" fill="#84CC16" />
+
+  <!-- Rounded Medical Cross with Integrated Care Silhouette Cutout -->
+  <path d="M82 68C82 59.1634 89.1634 52 98 52H120C128.837 52 136 59.1634 136 68V88H154C162.837 88 170 95.1634 170 104V124C170 132.837 162.837 140 154 140H136V162C136 170.837 128.837 178 120 178H98C89.1634 178 82 170.837 82 162V140H62C53.1634 140 46 132.837 46 124V104C46 95.1634 53.1634 88 62 88H82V68Z" fill="url(#iacCross)" />
+
+  <!-- White Humanity / Care Silhouette Inside Cross -->
+  <circle cx="115" cy="94" r="11" fill="#FFFFFF" />
+  <path d="M68 99C92 98 106 108 117 119C128 104 146 90 166 86C145 96 131 112 118 134C108 150 96 168 86 184C96 154 103 128 96 113C90 103 80 100 68 99Z" fill="#FFFFFF" />
+
+  <!-- Vibrant Green Healthcare Leaf Swooping Upward -->
+  <path d="M86 186C106 138 138 108 176 74C186 102 186 134 166 158C148 178 118 184 86 186Z" fill="url(#iacLeafMain)" />
+  <path d="M86 186C116 152 146 134 174 124C160 162 128 182 86 186Z" fill="url(#iacLeafEdge)" />
+
+  <!-- Crisp White Leaf Vein -->
+  <path d="M88 184C114 156 140 138 164 128" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Lower Orbital Swoosh -->
+  <path d="M44 122C26 162 56 206 116 200C144 197 166 186 180 174C156 190 124 195 94 191C52 185 34 156 44 122Z" fill="url(#iacOrbitBottom)" />
+</svg>
